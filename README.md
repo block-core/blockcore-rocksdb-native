@@ -12,7 +12,6 @@
   <p align="center">
       <a href="https://github.com/block-core/blockcore-rocksdb-native/actions"><img src="https://github.com/block-core/blockcore-rocksdb-native/workflows/Build/badge.svg" /></a>
       <a href="https://github.com/block-core/blockcore-rocksdb-native/actions"><img src="https://github.com/block-core/blockcore-rocksdb-native/workflows/Release/badge.svg" /></a>
-    <a href="https://www.nuget.org/packages/rocksdb/"><img src="https://img.shields.io/nuget/v/blockcore-rocksdb.svg?maxAge=0&colorB=brightgreen" /></a>
   </p>
 </p>
 

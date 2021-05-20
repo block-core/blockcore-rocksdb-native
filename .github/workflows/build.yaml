@@ -3,8 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - master
-      - feature/*
+      - main
 
   workflow_dispatch:
 
@@ -47,7 +46,7 @@ jobs:
         echo "ROCKSDBVERSION=$(cat rocksdbversion)" >> $GITHUB_ENV
       shell: bash
 
-    - name: List variable
+    - name: List variables
       run: |
         echo $ROCKSDBVERSION
       shell: bash
@@ -67,9 +66,6 @@ jobs:
       shell: cmd
       working-directory: ${{ github.workspace }}/build-native/
 
-    - name: Display structure of files
-      run: ls -R
-
     - uses: actions/upload-artifact@v2
       with:
         name: Blockcore-RocksDB-${{env.ROCKSDBVERSION}}-${{matrix.os}}-preview
@@ -84,4 +80,4 @@ jobs:
         prerelease: false
         body: 'win-x64 (.dll), linux-x64 (.so), osx-x64 (.dylip)'
         name: "Blockcore RocksDB Native (Release ${{env.ROCKSDBVERSION}})"
-        tag: ${{env.ROCKSDBVERSION}}-native
+        tag: ${{env.ROCKSDBVERSION}}
