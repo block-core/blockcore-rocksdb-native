@@ -10,8 +10,7 @@
     Native APIs for RocksDB by Facebook, used by the Blockcore RocksDB NuGet package.
   </p>
   <p align="center">
-      <a href="https://github.com/block-core/blockcore-rocksdb-native/actions"><img src="https://github.com/block-core/blockcore-rocksdb-native/workflows/Build/badge.svg" /></a>
-      <a href="https://github.com/block-core/blockcore-rocksdb-native/actions"><img src="https://github.com/block-core/blockcore-rocksdb-native/workflows/Release/badge.svg" /></a>
+      <a href="https://github.com/block-core/blockcore-rocksdb-native/actions/workflows/build.yaml"><img src="https://github.com/block-core/blockcore-rocksdb-native/actions/workflows/build.yaml/badge.svg" /></a>
   </p>
 </p>
 
