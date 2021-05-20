@@ -1,0 +1,83 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+
+  buildAndRelease:
+
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+        include:
+          - os: windows-latest
+            extension: "dll"
+            runtime: "win-x64"
+            filename: "librocksdb.dll"
+          - os: ubuntu-latest
+            extension: "so"
+            runtime: "linux-x64"
+            filename: "librocksdb.so"
+          - os: macos-latest
+            runtime: "osx-x64"
+            extension: "dylib"
+            filename: "librocksdb.dylib"
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      SOLUTION_PATH: 'src/RocksDB.sln'
+      BUILD_CONFIGURATION: 'Release'
+
+    steps:
+
+    - uses: actions/checkout@v2
+      name: Checkout
+
+    - name: Variables
+      run: |
+        ROCKSDBVNUM=`cat rocksdbversion`
+        echo "ROCKSDBVERSION=$(cat rocksdbversion)" >> $GITHUB_ENV
+      shell: bash
+
+    - name: List variables
+      run: |
+        echo $ROCKSDBVERSION
+      shell: bash
+
+    - name: Build Linux/Mac
+      if: matrix.os != 'windows-latest'
+      run: |
+        chmod +x ./build-rocksdb.sh
+        sh ./build-rocksdb.sh
+      shell: bash
+      working-directory: ${{ github.workspace }}/build-native/
+
+    - name: Build Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 && bash build-rocksdb.sh
+      shell: cmd
+      working-directory: ${{ github.workspace }}/build-native/
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Blockcore-RocksDB-${{env.ROCKSDBVERSION}}-${{matrix.os}}-preview
+        path: "${{github.workspace}}/build-native/runtimes/"
+
+    - name: Release
+      uses: sondreb/action-release@master
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: "${{github.workspace}}/build-native/runtimes/${{ matrix.runtime }}/native/librocksdb.${{ matrix.extension }}"
+        draft: true
+        prerelease: false
+        body: 'win-x64 (.dll), linux-x64 (.so), osx-x64 (.dylip)'
+        name: "Blockcore RocksDB Native (Release ${{env.ROCKSDBVERSION}})"
+        tag: ${{env.ROCKSDBVERSION}}
