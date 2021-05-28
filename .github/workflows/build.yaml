@@ -53,7 +53,7 @@ jobs:
         echo $ROCKSDBRELEASE
       shell: bash
 
-    - name: Display structure of files
+    - name: Display structure of files (before build)
       run: ls -R
 
     - name: Build Linux/Mac
@@ -71,6 +71,9 @@ jobs:
       shell: cmd
       working-directory: ${{ github.workspace }}/build-native/
 
+    - name: Display structure of files (after build)
+      run: ls -R
+
     - uses: actions/upload-artifact@v2
       with:
         name: Blockcore-RocksDB-${{env.ROCKSDBRELEASE}}-${{matrix.os}}-preview
@@ -80,7 +83,8 @@ jobs:
       uses: sondreb/action-release@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        files: "${{github.workspace}}/build-native/runtimes/${{ matrix.runtime }}/native/librocksdb.${{ matrix.extension }}"
+        #files: "${{github.workspace}}/build-native/runtimes/${{ matrix.runtime }}/native/librocksdb.${{ matrix.extension }}"
+        folder: "${{github.workspace}}/build-native/runtimes/${{ matrix.runtime }}/native/"
         draft: true
         prerelease: false
         body: 'win-x64 (.dll), linux-x64 (.so), osx-x64 (.dylip)'
