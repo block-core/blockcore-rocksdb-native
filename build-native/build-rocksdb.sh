@@ -41,6 +41,11 @@ update_vcxproj(){
     /bin/find . -type f -name '*.vcxproj' -exec sed -i 's/MultiThreadedDLL/MultiThreaded/g; s/MultiThreadedDebugDLL/MultiThreadedDebug/g' '{}' ';'
 }
 
+update_brew_pack_version() {
+    ZSTD_VERSION_INSTALLED=$(brew list --versions | grep zstd | cut -d " " -f 2)
+    LZ4_VERSION_INSTALLED=$(brew list --versions | grep lz4 | cut -d " " -f 2)
+}
+
 BASEDIR=$(dirname "$0")
 OSINFO=$(uname)
 
@@ -174,6 +179,29 @@ else
         strip librocksdb${LIBEXT}
         mkdir -p ../runtimes/${RUNTIME}/native && cp -vL ./librocksdb${LIBEXT} ../runtimes/${RUNTIME}/native/librocksdb${LIBEXT}
         mkdir -p ../rocksdb-${ROCKSDBVERSION}/${RUNTIME}/native && cp -vL ./librocksdb${LIBEXT} ../rocksdb-${ROCKSDBVERSION}/${RUNTIME}/native/librocksdb${LIBEXT}
+
+        if [ "$(uname)" == "Darwin" ]; then
+            echo "Adding dependencies.."
+            update_brew_pack_version
+
+            echo "Copying libraries..."
+            cp /usr/local/Cellar/snappy/${SNAPPYVERSION}/lib/libsnappy.1.dylib .
+            cp /usr/local/Cellar/lz4/${LZ4_VERSION_INSTALLED}/lib/liblz4.1.dylib .
+            cp /usr/local/Cellar/zstd/${ZSTD_VERSION_INSTALLED}/lib/libzstd.1.dylib .
+
+            echo "Updating librocksdb.dylib"
+            install_name_tool -change /usr/local/opt/snappy/lib/libsnappy.1.dylib @executable_path/libsnappy.1.dylib librocksdb.dylib
+            install_name_tool -change /usr/local/opt/lz4/lib/liblz4.1.dylib @executable_path/liblz4.1.dylib librocksdb.dylib
+            install_name_tool -change /usr/local/opt/zstd/lib/libzstd.1.dylib @executable_path/libzstd.1.dylib librocksdb.dylib
+            
+            echo "Finishing..."
+            cp -vL ./libsnappy.1.dylib ../runtimes/${RUNTIME}/native/
+            cp -vL ./liblz4.1.dylib ../runtimes/${RUNTIME}/native/
+            cp -vL ./libzstd.1.dylib ../runtimes/${RUNTIME}/native/
+        else
+            echo "Adding linux dependencies..."
+            # TODO: Add Linux dependencies
+        fi
 
     }) || fail "rocksdb build failed"
 fi
