@@ -118,7 +118,7 @@ if [[ $OSINFO == *"MSYS"* || $OSINFO == *"MINGW"* ]]; then
         ls -R ./build/Release/
 
         mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb.dll
-        mkdir -p ../rocksdb-${ROCKSDBVERSION}/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../rocksdb-${ROCKSDBVERSION}/win-x64/native/librocksdb.dll
+        #mkdir -p ../rocksdb-${ROCKSDBVERSION}/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../rocksdb-${ROCKSDBVERSION}/win-x64/native/librocksdb.dll
     }) || fail "rocksdb build failed"
 else
     
@@ -145,7 +145,7 @@ else
     else
         echo "Linux detected"
         CFLAGS=-static-libstdc++
-        LIBEXT=.so
+        LIBEXT=.a
         RUNTIME=linux-x64
         # Linux Dependencies    
         sudo apt-get install libsnappy-dev libbz2-dev libz-dev liblz4-dev libzstd-dev
