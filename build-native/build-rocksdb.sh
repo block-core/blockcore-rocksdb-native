@@ -175,7 +175,8 @@ else
 
         echo "----- Build 64 bit --------------------------------------------------"
         make clean
-        CFLAGS="${CFLAGS}" PORTABLE=1 make -j$CONCURRENCY shared_lib || fail "64-bit build failed"
+        #CFLAGS="${CFLAGS}" PORTABLE=1 make -j$CONCURRENCY shared_lib || fail "64-bit build failed"
+        CFLAGS="${CFLAGS}" PORTABLE=1 make -j$CONCURRENCY static_lib || fail "64-bit build failed"
         strip librocksdb${LIBEXT}
 
         mkdir -p ../runtimes/${RUNTIME}/native
