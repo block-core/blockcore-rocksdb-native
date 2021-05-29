@@ -118,7 +118,7 @@ if [[ $OSINFO == *"MSYS"* || $OSINFO == *"MINGW"* ]]; then
         ls -R ./build/Release/
 
         mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb.dll
-        mkdir -p ../rocksdb-${ROCKSDBVERSION}/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../rocksdb-${ROCKSDBVERSION}/win-x64/native/librocksdb.dll
+        #mkdir -p ../rocksdb-${ROCKSDBVERSION}/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../rocksdb-${ROCKSDBVERSION}/win-x64/native/librocksdb.dll
     }) || fail "rocksdb build failed"
 else
     
@@ -192,9 +192,9 @@ else
             cp /usr/local/Cellar/zstd/${ZSTD_VERSION_INSTALLED}/lib/libzstd.1.dylib .
 
             echo "Updating librocksdb.dylib"
-            install_name_tool -change /usr/local/opt/snappy/lib/libsnappy.1.dylib @executable_path/libsnappy.1.dylib librocksdb.dylib
-            install_name_tool -change /usr/local/opt/lz4/lib/liblz4.1.dylib @executable_path/liblz4.1.dylib librocksdb.dylib
-            install_name_tool -change /usr/local/opt/zstd/lib/libzstd.1.dylib @executable_path/libzstd.1.dylib librocksdb.dylib
+            install_name_tool -change /usr/local/opt/snappy/lib/libsnappy.1.dylib ./libsnappy.1.dylib librocksdb.dylib
+            install_name_tool -change /usr/local/opt/lz4/lib/liblz4.1.dylib ./liblz4.1.dylib librocksdb.dylib
+            install_name_tool -change /usr/local/opt/zstd/lib/libzstd.1.dylib ./libzstd.1.dylib librocksdb.dylib
             
             echo "Finishing..."
             cp -vL ./libsnappy.1.dylib ../runtimes/${RUNTIME}/native/
