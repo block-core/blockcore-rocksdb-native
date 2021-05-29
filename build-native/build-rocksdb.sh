@@ -177,8 +177,10 @@ else
         make clean
         CFLAGS="${CFLAGS}" PORTABLE=1 make -j$CONCURRENCY shared_lib || fail "64-bit build failed"
         strip librocksdb${LIBEXT}
-        mkdir -p ../runtimes/${RUNTIME}/native && cp -vL ./librocksdb${LIBEXT} ../runtimes/${RUNTIME}/native/librocksdb${LIBEXT}
-        mkdir -p ../rocksdb-${ROCKSDBVERSION}/${RUNTIME}/native && cp -vL ./librocksdb${LIBEXT} ../rocksdb-${ROCKSDBVERSION}/${RUNTIME}/native/librocksdb${LIBEXT}
+
+        mkdir -p ../runtimes/${RUNTIME}/native
+        #mkdir -p ../runtimes/${RUNTIME}/native && cp -vL ./librocksdb${LIBEXT} ../runtimes/${RUNTIME}/native/librocksdb${LIBEXT}
+        #mkdir -p ../rocksdb-${ROCKSDBVERSION}/${RUNTIME}/native && cp -vL ./librocksdb${LIBEXT} ../rocksdb-${ROCKSDBVERSION}/${RUNTIME}/native/librocksdb${LIBEXT}
 
         if [ "$(uname)" == "Darwin" ]; then
             echo "Adding dependencies.."
@@ -202,6 +204,8 @@ else
             echo "Adding linux dependencies..."
             # TODO: Add Linux dependencies
         fi
+
+        cp -vL ./librocksdb${LIBEXT} ../runtimes/${RUNTIME}/native/  
 
     }) || fail "rocksdb build failed"
 fi
