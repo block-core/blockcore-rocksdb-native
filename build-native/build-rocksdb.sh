@@ -134,7 +134,7 @@ else
         echo "${CMAKE_INSTALL_LIBDIR}"
         echo "${CMAKE_INSTALL_INCLUDEDIR}"
         
-        brew install snappy
+        brew install snappy@$SNAPPYVERSION
         brew install zstd
         brew install lz4
         brew install zlib
