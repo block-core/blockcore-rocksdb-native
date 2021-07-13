@@ -134,7 +134,8 @@ else
         echo "${CMAKE_INSTALL_LIBDIR}"
         echo "${CMAKE_INSTALL_INCLUDEDIR}"
         
-        brew install snappy@$SNAPPYVERSION
+        # brew install snappy@$SNAPPYVERSION
+        brew install https://github.com/Homebrew/homebrew-core/blob/69fe9b54b86509fc5370d743a82d3811ac220906/Formula/snappy.rb
         brew install zstd
         brew install lz4
         brew install zlib
