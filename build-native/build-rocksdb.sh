@@ -2,7 +2,7 @@
 
 ROCKSDBVNUM=`cat ../rocksdbversion`
 ROCKSDBVERSION=v${ROCKSDBVNUM}
-SNAPPYVERSION=1.1.8 # TODO: 1.1.9 did not work, so changes must be done to upgrade.
+SNAPPYVERSION=1.1.9
 
 ROCKSDBREMOTE=https://github.com/facebook/rocksdb
 SNAPPYREMOTE=https://github.com/google/snappy
@@ -134,8 +134,7 @@ else
         echo "${CMAKE_INSTALL_LIBDIR}"
         echo "${CMAKE_INSTALL_INCLUDEDIR}"
         
-        # brew install snappy@$SNAPPYVERSION
-        brew install https://github.com/Homebrew/homebrew-core/blob/69fe9b54b86509fc5370d743a82d3811ac220906/Formula/snappy.rb
+        brew install snappy
         brew install zstd
         brew install lz4
         brew install zlib
