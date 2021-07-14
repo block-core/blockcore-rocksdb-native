@@ -63,7 +63,7 @@ if [[ $OSINFO == *"MSYS"* || $OSINFO == *"MINGW"* ]]; then
 
     mkdir -p snappy || fail "unable to create snappy directory"
     (cd snappy && {
-        checkout "snappy" "$SNAPPYREMOTE" "$SNAPPYVERSION" "$SNAPPYVERSION"
+        checkout "snappy" "$SNAPPYREMOTE" "$SNAPPYVERSION"
         mkdir -p build
         (cd build && {
             cmake -G "Visual Studio 16 2019" -DSNAPPY_BUILD_TESTS=0 .. || fail "Running cmake on snappy failed"
@@ -158,7 +158,7 @@ else
     mkdir -p rocksdb || fail "unable to create rocksdb directory"
 
     (cd rocksdb && {
-        checkout "rocksdb" "$ROCKSDBREMOTE" "$ROCKSDBVERSION"
+        checkout "rocksdb" "$ROCKSDBREMOTE" "$ROCKSDBVERSION" "$ROCKSDBVERSION"
 
         export CFLAGS
         export LDFLAGS
