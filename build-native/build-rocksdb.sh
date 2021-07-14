@@ -5,7 +5,8 @@ ROCKSDBVERSION=v${ROCKSDBVNUM}
 SNAPPYVERSION=1.1.9
 
 ROCKSDBREMOTE=https://github.com/facebook/rocksdb
-SNAPPYREMOTE=https://github.com/google/snappy
+# SNAPPYREMOTE=https://github.com/google/snappy
+SNAPPYREMOTE=https://github.com/block-core/snappy
 
 CONCURRENCY=8
 
