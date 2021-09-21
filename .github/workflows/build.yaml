@@ -42,6 +42,7 @@ jobs:
 
     - name: Variables
       run: |
+        AVX2=1
         ROCKSDBVNUM=`cat rocksdbversion`
         echo "ROCKSDBVERSION=$(cat rocksdbversion)" >> $GITHUB_ENV
         echo "ROCKSDBRELEASE=$(cat rocksdbversion).$(cat revision)" >> $GITHUB_ENV
@@ -63,6 +64,18 @@ jobs:
         sh ./build-rocksdb.sh
       shell: bash
       working-directory: ${{ github.workspace }}/build-native/
+
+    - name: Build Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 && bash build-rocksdb.sh
+      shell: cmd
+      working-directory: ${{ github.workspace }}/build-native/
+
+    - name: Variables
+      run: |
+        AVX2=0
+      shell: bash
 
     - name: Build Windows
       if: matrix.os == 'windows-latest'

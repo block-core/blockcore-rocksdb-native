@@ -2,6 +2,8 @@
 
 ROCKSDBVNUM=`cat ../rocksdbversion`
 ROCKSDBVERSION=v${ROCKSDBVNUM}
+# Is this needed?
+AVX2=${AVX2}
 SNAPPYVERSION=1.1.9
 
 ROCKSDBREMOTE=https://github.com/facebook/rocksdb
@@ -110,7 +112,7 @@ if [[ $OSINFO == *"MSYS"* || $OSINFO == *"MINGW"* ]]; then
         export ZSTD_LIB_RELEASE="${VCPKG_HOME}/zstd_x64-windows-static/lib/zstd_static.lib"
 
         (cd build && {
-            cmake -G "Visual Studio 16 2019" -DWITH_WINDOWS_UTF8_FILENAMES=1 -DWITH_TESTS=OFF -DWITH_MD_LIBRARY=OFF -DOPTDBG=1 -DGFLAGS=0 -DSNAPPY=1 -DWITH_ZLIB=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 -DPORTABLE=1 -DWITH_TOOLS=0 .. || fail "Running cmake failed"
+            cmake -G "Visual Studio 16 2019" -DWITH_WINDOWS_UTF8_FILENAMES=1 -DWITH_TESTS=OFF -DWITH_MD_LIBRARY=OFF -DOPTDBG=1 -DGFLAGS=0 -DSNAPPY=1 -DWITH_ZLIB=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 -DWITH_AVX2=$AVX2 -DPORTABLE=1 -DWITH_TOOLS=0 .. || fail "Running cmake failed"
             update_vcxproj || warn "failed to patch vcxproj files for static vc runtime"
         }) || fail "cmake build generation failed"
 
@@ -118,7 +120,13 @@ if [[ $OSINFO == *"MSYS"* || $OSINFO == *"MINGW"* ]]; then
 
         ls -R ./build/Release/
 
-        mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb.dll
+        if [ $AVX2 == 1 ]
+        then
+            mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb.dll
+        else
+            mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb-noavx2.dll
+        fi
+
         #mkdir -p ../rocksdb-${ROCKSDBVERSION}/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../rocksdb-${ROCKSDBVERSION}/win-x64/native/librocksdb.dll
     }) || fail "rocksdb build failed"
 else
