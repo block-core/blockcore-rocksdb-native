@@ -120,7 +120,7 @@ if [[ $OSINFO == *"MSYS"* || $OSINFO == *"MINGW"* ]]; then
 
         ls -R ./build/Release/
 
-        if [ $AVX2 == 1 ]
+        if [ $AVX2 == "1" ]
         then
             mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb.dll
         else
