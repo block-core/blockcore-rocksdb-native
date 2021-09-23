@@ -43,6 +43,7 @@ jobs:
     - name: Variables
       run: |
         AVX2=1
+        echo "AVX2=1" >> $GITHUB_ENV
         ROCKSDBVNUM=`cat rocksdbversion`
         echo "ROCKSDBVERSION=$(cat rocksdbversion)" >> $GITHUB_ENV
         echo "ROCKSDBRELEASE=$(cat rocksdbversion).$(cat revision)" >> $GITHUB_ENV
@@ -75,6 +76,7 @@ jobs:
     - name: Variables
       run: |
         AVX2=0
+        echo "AVX2=0" >> $GITHUB_ENV
       shell: bash
 
     - name: Build Windows

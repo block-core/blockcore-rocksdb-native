@@ -12,6 +12,9 @@ SNAPPYREMOTE=https://github.com/block-core/snappy
 
 CONCURRENCY=8
 
+echo "Building RocksDB Native libraries..."
+echo "AVX2 value \"${AVX2}\":"
+
 fail() {
     >&2 echo -e "\033[1;31m$1\033[0m"
     exit 1
@@ -122,8 +125,10 @@ if [[ $OSINFO == *"MSYS"* || $OSINFO == *"MINGW"* ]]; then
 
         if [ $AVX2 == "1" ]
         then
+            echo "Copy librocksdb.dll:"
             mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb.dll
         else
+            echo "Copy librocksdb-noavx2.dll:"
             mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb-noavx2.dll
         fi
 
