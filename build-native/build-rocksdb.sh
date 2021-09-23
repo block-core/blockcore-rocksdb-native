@@ -114,24 +114,32 @@ if [[ $OSINFO == *"MSYS"* || $OSINFO == *"MINGW"* ]]; then
         export ZSTD_LIB_DEBUG="${VCPKG_HOME}/zstd_x64-windows-static/debug/lib/zstd_staticd.lib"
         export ZSTD_LIB_RELEASE="${VCPKG_HOME}/zstd_x64-windows-static/lib/zstd_static.lib"
 
-        (cd build && {
-            cmake -G "Visual Studio 16 2019" -DWITH_WINDOWS_UTF8_FILENAMES=1 -DWITH_TESTS=OFF -DWITH_MD_LIBRARY=OFF -DOPTDBG=1 -DGFLAGS=0 -DSNAPPY=1 -DWITH_ZLIB=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 -DWITH_AVX2=$AVX2 -DPORTABLE=1 -DWITH_TOOLS=0 .. || fail "Running cmake failed"
-            update_vcxproj || warn "failed to patch vcxproj files for static vc runtime"
-        }) || fail "cmake build generation failed"
-
-        cmd //c "msbuild build/rocksdb.sln /p:Configuration=Release /m:$CONCURRENCY" || fail "Rocksdb release build failed"
-
-        ls -R ./build/Release/
-
         if [ $AVX2 == "1" ]
         then
-            echo "Copy librocksdb.dll:"
+            echo "Building librocksdb.dll:"
+
+            (cd build && {
+                cmake -G "Visual Studio 16 2019" -DWITH_WINDOWS_UTF8_FILENAMES=1 -DWITH_TESTS=OFF -DWITH_MD_LIBRARY=OFF -DOPTDBG=1 -DGFLAGS=0 -DSNAPPY=1 -DWITH_ZLIB=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 -DWITH_AVX2=1 -DPORTABLE=1 -DWITH_TOOLS=0 .. || fail "Running cmake failed"
+                update_vcxproj || warn "failed to patch vcxproj files for static vc runtime"
+            }) || fail "cmake build generation failed"
+
+            cmd //c "msbuild build/rocksdb.sln /p:Configuration=Release /m:$CONCURRENCY" || fail "Rocksdb release build failed"
+            
             mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb.dll
         else
-            echo "Copy librocksdb-noavx2.dll:"
+            echo "Building librocksdb-noavx2.dll:"
+
+            (cd build && {
+                cmake -G "Visual Studio 16 2019" -DWITH_WINDOWS_UTF8_FILENAMES=1 -DWITH_TESTS=OFF -DWITH_MD_LIBRARY=OFF -DOPTDBG=1 -DGFLAGS=0 -DSNAPPY=1 -DWITH_ZLIB=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 -DWITH_AVX2=0 -DPORTABLE=1 -DWITH_TOOLS=0 .. || fail "Running cmake failed"
+                update_vcxproj || warn "failed to patch vcxproj files for static vc runtime"
+            }) || fail "cmake build generation failed"
+
+            cmd //c "msbuild build/rocksdb.sln /p:Configuration=Release /m:$CONCURRENCY" || fail "Rocksdb release build failed"
+
             mkdir -p ../runtimes/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../runtimes/win-x64/native/librocksdb-noavx2.dll
         fi
 
+        #ls -R ./build/Release/
         #mkdir -p ../rocksdb-${ROCKSDBVERSION}/win-x64/native && cp -v ./build/Release/rocksdb-shared.dll ../rocksdb-${ROCKSDBVERSION}/win-x64/native/librocksdb.dll
     }) || fail "rocksdb build failed"
 else
