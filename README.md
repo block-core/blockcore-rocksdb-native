@@ -37,6 +37,10 @@ https://github.com/warrenfalk/rocksdb-sharp
 
 https://github.com/curiosity-ai/rocksdb-sharp
 
+Facebook repository:
+
+https://github.com/facebook/rocksdb
+
 ### License
 
 [BSD 2-Clause License](LICENSE)

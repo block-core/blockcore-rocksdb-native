@@ -170,7 +170,7 @@ else
         LIBEXT=.so
         RUNTIME=linux-x64
         # Linux Dependencies    
-        sudo apt-get install libsnappy-dev libbz2-dev libz-dev liblz4-dev libzstd-dev
+        sudo apt-get install libsnappy-dev libbz2-dev libc6-dev libc6 libz-dev liblz4-dev libzstd-dev
 
         # TODO: Figure out if we need this?
         sudo apt-get install libgflags-dev, zlib1g-dev
